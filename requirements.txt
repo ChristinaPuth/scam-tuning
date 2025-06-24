@@ -1,0 +1,10 @@
+torch
+unsloth
+unsloth-zoo
+trl
+datasets
+pandas
+numpy
+accelerate
+bitsandbytes
+triton

@@ -1,0 +1,9 @@
+unsloth_compiled_cache/
+unsloth_training_checkpoints/
+_unsloth_temporary_saved_buffers/
+output/
+data/
+__pycache__/
+*:Zone.Identifier
+.env
+.DS_Store
