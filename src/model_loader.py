@@ -36,6 +36,7 @@ class ModelLoader:
             full_finetuning=self.model_config.full_finetuning,
             token=self.model_config.token,
             dtype=self.model_config.dtype,
+            attn_implementation="eager",
         )
         
         print("Base model loaded successfully")
@@ -80,6 +81,7 @@ class ModelLoader:
             model_name=lora_path,
             max_seq_length=self.model_config.max_seq_length,
             load_in_4bit=self.model_config.load_in_4bit,
+            attn_implementation="eager",
         )
         
         print("LoRA model loaded successfully")

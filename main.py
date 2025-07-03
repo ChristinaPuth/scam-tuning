@@ -1,6 +1,12 @@
 import os
 os.environ["CUDA_LAUNCH_BLOCKING"] = "0"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0, 1"
+import os
+
+# # 禁用 Triton 和 CUTLASS，启用 xFormers（如果可用）
+# os.environ['USE_TRT_KERNELS'] = '0'
+# os.environ['CUTLASS_DISABLE'] = '1'
+# os.environ['XFORMERS_AVAILABLE'] = '1'
 
 import torch
 import json

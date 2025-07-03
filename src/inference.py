@@ -20,15 +20,32 @@ class ModelInference:
             }
         ]
     
+    # def format_messages(self, messages: List[Dict[str, str]], add_generation_prompt: bool = True) -> str:
+    #     """Format messages using the chat template"""
+    #     text = self.tokenizer.apply_chat_template(
+    #         messages,
+    #         tokenize=False,
+    #         add_generation_prompt=add_generation_prompt,
+    #         enable_thinking=self.inference_config.enable_thinking,
+    #     )
+    #     return text
     def format_messages(self, messages: List[Dict[str, str]], add_generation_prompt: bool = True) -> str:
-        """Format messages using the chat template"""
+        """Format messages and truncate input to avoid exceeding max token length"""
         text = self.tokenizer.apply_chat_template(
             messages,
             tokenize=False,
             add_generation_prompt=add_generation_prompt,
             enable_thinking=self.inference_config.enable_thinking,
         )
+    
+    # Truncate input text to ensure tokenized length ≤ 2048
+        input_ids = self.tokenizer(text, return_tensors="pt").input_ids[0]
+        if len(input_ids) > 2048:
+            truncated_ids = input_ids[-2048:]  # 保留结尾部分
+            text = self.tokenizer.decode(truncated_ids, skip_special_tokens=True)
+    
         return text
+
     
     def generate_response(self, 
                          messages: List[Dict[str, str]], 

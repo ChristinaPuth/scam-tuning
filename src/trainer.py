@@ -37,6 +37,7 @@ class ModelTrainer:
             train_dataset=train_dataset,
             eval_dataset=eval_dataset,
             args=sft_config,
+            # use_flash_attention_2=False,
         )
         
         print("SFT trainer configured successfully")

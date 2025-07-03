@@ -7,21 +7,25 @@ from datetime import datetime
 @dataclass
 class ModelConfig:
     """Configuration for model loading and LoRA setup"""
-    model_name: str = "unsloth/DeepSeek-R1-Distill-Qwen-14B-unsloth-bnb-4bit"
+    # model_name: str = "unsloth/DeepSeek-R1-Distill-Qwen-14B-unsloth-bnb-4bit"
+    # model_name: str = "unsloth/Qwen2.5-0.5B-Instruct-bnb-4bit"
+    model_name: str = "unsloth/DeepSeek-R1-Distill-Llama-8B-unsloth-bnb-4bit"
+    
     max_seq_length: int = 2048
     load_in_4bit: bool = True
     load_in_8bit: bool = False
     full_finetuning: bool = False
     token: Optional[str] = os.getenv("HUGGINGFACE_TOKEN")
-    dtype: torch.dtype = torch.bfloat16
+    # dtype: torch.dtype = torch.bfloat16
+    dtype: torch.dtype = torch.float16
 
 @dataclass
 class LoRAConfig:
     """Configuration for LoRA adaptation"""
-    r: int = 32
+    r: int = 32   #######
     target_modules: List[str] = None
-    lora_alpha: int = 32
-    lora_dropout: float = 0
+    lora_alpha: int =32  #######
+    lora_dropout: float = 0.05####
     bias: str = "none"
     use_gradient_checkpointing: str = "unsloth"
     random_state: int = 3407
@@ -40,21 +44,25 @@ class TrainingConfig:
     """Configuration for training parameters"""
     dataset_text_field: str = "text"
     per_device_train_batch_size: int = 2
-    gradient_accumulation_steps: int = 4
-    warmup_steps: int = 5
-    max_steps: int = 30
-    learning_rate: float = 2e-4
+   
+    gradient_accumulation_steps: int = 2
+  
+    warmup_steps: int = 500    ########
+    max_steps: int = 10000   ############
+    learning_rate: float = 2e-5   ##########
     logging_steps: int = 1
     optim: str = "adamw_8bit"
     weight_decay: float = 0.01
-    lr_scheduler_type: str = "linear"
+    lr_scheduler_type: str = "linear"  ###########
     seed: int = 3407
     report_to: str = "none"
 
 @dataclass
 class DataConfig:
     """Configuration for data processing"""
-    data_path: str = "data/unified_error_dataset_annotated.csv"
+    # data_path: str = "src/data/unified_error_dataset_annotated.csv"
+    data_path: str = "src/data/processed_phishing_dataset.csv"
+
     chat_percentage: float = None
     shuffle_seed: int = 3407
 
@@ -94,3 +102,23 @@ class SaveConfig:
         else:
             clean_model_name = model_name.replace("/", "_").replace("-", "_")
             return os.path.join(self.base_output_dir, f"lora_{clean_model_name}") 
+
+    # 在 src/config.py 文件末尾添加以下代码：
+
+def create_default_configs():
+    """Create default configuration objects"""
+    model_config = ModelConfig()
+    lora_config = LoRAConfig()
+    training_config = TrainingConfig()
+    data_config = DataConfig()
+    inference_config = InferenceConfig()
+    save_config = SaveConfig()
+    
+    return (
+        model_config,
+        lora_config,
+        training_config,
+        data_config,
+        inference_config,
+        save_config
+    )
